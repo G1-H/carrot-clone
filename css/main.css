@@ -3,7 +3,7 @@ main {
 }
 .item-list {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-bottom: 1px solid #ededef;
   padding: 20px 0 20px 0;
@@ -50,6 +50,8 @@ main {
   color: white;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  width: 60px;
+  height: 20px;
 }
 
 .write-btn:hover {
