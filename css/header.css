@@ -17,6 +17,7 @@ header {
   font-size: 12px;
   font-weight: bold;
 }
+
 /* 메뉴바 */
 .menu-bar {
   display: flex;
@@ -40,8 +41,18 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .menu-bar__icons img {
   width: 30px;
   margin-right: 10px;
+}
+#dot {
+  width: 10px;
+  height: 10px;
+  background-color: tomato;
+  border-radius: 5px;
+  position: absolute;
+  right: 12px;
+  top: 5px;
 }
