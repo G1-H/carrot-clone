@@ -16,6 +16,7 @@ const renderData = (data) => {
   data.forEach(async (obj) => {
     const div = document.createElement("div");
     div.className = "item-list";
+    main.appendChild(div);
 
     const ImgDiv = document.createElement("div");
     ImgDiv.className = "item-list__img";
@@ -50,15 +51,17 @@ const renderData = (data) => {
 
     div.appendChild(ImgDiv);
     div.appendChild(InfoDiv);
-
-    main.appendChild(div);
   });
 };
 
 const fetchList = async () => {
   const resp = await fetch("/items");
   const data = await resp.json();
-  renderData(data);
+  const dataSorted = await data.sort((a, b) => {
+    if (a.insertAt < b.insertAt) return 1;
+    if (a.insertAt > b.insertAt) return -1;
+  });
+  renderData(dataSorted);
 };
 
 fetchList();

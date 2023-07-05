@@ -52,22 +52,37 @@ async def get_items():
     cur = con.cursor()
     rows = cur.execute(
         f"""
-                       SELECT * FROM items ORDER BY insertAt DESC;
+                       SELECT * FROM items;
                         """
     ).fetchall()
+
     return JSONResponse(jsonable_encoder(dict(row) for row in rows))
 
 
 @app.get("/images/{item_id}")
 async def get_image(item_id):
     cur = con.cursor()
-    image_bytes = cur.execute(
-        f"""
-                              SELECT image FROM items WHERE id = {item_id}
-                              """
-    ).fetchone()[0]
+    image_bytes = cur.execute(f"""
+                              SELECT image FROM items WHERE id = {item_id} 
+                              """).fetchone()[0]
 
     return Response(content=bytes.fromhex(image_bytes), media_type="image/*")
+
+
+@app.post("/signup")
+def signup(id: Annotated[str, Form()],
+           password: Annotated[str, Form()],
+           name: Annotated[str, Form()],
+           email: Annotated[str, Form()],):
+    cur.execute(f"""
+                INSERT INTO users
+                VALUES ('{id}', '{name}', '{email}', '{password}')
+                """)
+    con.commit()
+    return "200"
+    print(id, password, name, email)
+
+    return "200"
 
 
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
