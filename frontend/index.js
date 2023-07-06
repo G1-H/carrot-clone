@@ -23,7 +23,6 @@ const renderData = (data) => {
 
     const img = document.createElement("img");
     const resp = await fetch(`/images/${obj.id}`);
-    console.log(resp);
     const blob = await resp.blob();
     const url = URL.createObjectURL(blob);
     img.src = url;
@@ -41,7 +40,7 @@ const renderData = (data) => {
 
     const InfoPriceDiv = document.createElement("div");
     InfoPriceDiv.className = "item-list__info-price";
-    InfoPriceDiv.innerText = obj.price;
+    InfoPriceDiv.innerText = Number(obj.price).toLocaleString("us-US");
 
     ImgDiv.appendChild(img);
 
@@ -55,7 +54,13 @@ const renderData = (data) => {
 };
 
 const fetchList = async () => {
-  const resp = await fetch("/items");
+  const accessToken = window.localStorage.getItem("token");
+
+  const resp = await fetch("/items", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
   const data = await resp.json();
   const dataSorted = await data.sort((a, b) => {
     if (a.insertAt < b.insertAt) return 1;
