@@ -1,5 +1,13 @@
 <script>
-  import { getDatabase, ref, push } from "firebase/database";
+  import {
+    getDatabase,
+    ref,
+    push,
+    child,
+    get,
+    DataSnapshot,
+    onValue,
+  } from "firebase/database";
   import {
     getStorage,
     ref as refImage,
@@ -12,9 +20,35 @@
   let description;
   let place;
   let files;
+  export let params;
 
   const storage = getStorage();
   const db = getDatabase();
+
+  const dbRef = ref(getDatabase());
+  const itemsRef = ref(db, "items/");
+
+  const index = params.index;
+
+  onValue(itemsRef, (snapshot) => {
+    const data = snapshot.val();
+    const key = Object.keys(data);
+
+    get(child(dbRef, `items/${key[index]}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          title = snapshot.val().title;
+          price = snapshot.val().price;
+          description = snapshot.val().description;
+          place = snapshot.val().place;
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
 
   async function writeUserData(imgUrl) {
     console.log(title, price, description);
@@ -46,6 +80,7 @@
 <form id="write-form" on:submit|preventDefault={handleSubmit}>
   <div>
     <label for="image">이미지</label>
+    <!-- <img src={item.imgUrl} alt={item.title} /> -->
     <input type="file" bind:files id="image" name="image" />
   </div>
   <div>
